@@ -4,4 +4,4 @@ plugins {
 }
 
 rootProject.name = "dev-api-rest"
-include("app")
+include("api")
