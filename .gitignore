@@ -1,0 +1,60 @@
+# IntelliJ IDEA
+/.idea/
+*.iws
+*.iml
+*.ipr
+
+# Gradle
+/.gradle/
+/.gradle/*
+app/.gradle/
+app/.gradle/*
+/build/
+/build/*
+/app/build/
+/app/build/*
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+/gradle/
+/gradle/*
+/out/
+/out/*
+*.bat
+*.sh
+!gradle-wrapper.properties
+
+# Kotlin
+*.class
+*.kt.user
+/.idea/*
+
+# Ktor
+application.log
+
+# Mac OS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Logs
+/logs/
+/logs/*
+*.log
+
+# Kotlin Notebook
+*.knb
+
+# Directories for IDEs
+.vscode/
+.vscode-workspace/
+
+# Operating System files
+._*
+.Spotlight-V100
+.Trashes
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+/.gitattributes
