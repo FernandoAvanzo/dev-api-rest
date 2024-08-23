@@ -54,4 +54,6 @@ Thumbs.db
 .Spotlight-V100
 .Trashes
 # Ignore Gradle project-specific cache directory
-.gradle
+/.gradle
+/.kotlin
+/.kotlin/*
