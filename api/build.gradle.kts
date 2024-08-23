@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm") version "2.0.20"
     application
-    id("io.ktor.plugin") version "2.3.0"
+    id("io.ktor.plugin") version "2.3.12"
 }
 
 version = "1.0-SNAPSHOT"
@@ -34,5 +34,5 @@ java {
 }
 
 application {
-    mainClass.set("MainKt")
+    mainClass.set("api.MainKt")
 }
