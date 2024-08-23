@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     implementation("com.google.guava:guava:32.0.0-android")
+    implementation("org.slf4j:slf4j-simple:2.0.9")
     implementation("io.ktor:ktor-server-core:2.3.0")
     implementation("io.ktor:ktor-server-netty:2.3.0")
     implementation("io.ktor:ktor-serialization:2.3.0")

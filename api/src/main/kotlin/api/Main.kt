@@ -3,13 +3,21 @@
  */
 package api
 
-class App {
-    val greeting: String
-        get() {
-            return "Hello World!"
-        }
+import io.ktor.server.application.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
+
+
+@Suppress("UnusedReceiverParameter")
+fun Application.module() {
+
 }
 
 fun main() {
-    println(App().greeting)
+    embeddedServer(
+        Netty,
+        port = 9292,
+        host = "0.0.0.0",
+        module = Application::module
+    ).start(wait = true)
 }
