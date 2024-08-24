@@ -1,3 +1,5 @@
+import org.gradle.jvm.tasks.Jar
+
 plugins {
     kotlin("jvm") version "2.0.20"
     application
@@ -36,4 +38,10 @@ java {
 
 application {
     mainClass.set("api.MainKt")
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "api.MainKt"
+    }
 }
