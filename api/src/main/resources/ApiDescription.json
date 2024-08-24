@@ -1,0 +1,299 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Digital Dock API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/portadores": {
+      "post": {
+        "summary": "Criar um novo portador",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome_completo": {
+                    "type": "string"
+                  },
+                  "cpf": {
+                    "type": "string",
+                    "pattern": "^[0-9]{11}$"
+                  }
+                },
+                "required": ["nome_completo", "cpf"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Portador criado com sucesso"
+          },
+          "400": {
+            "description": "CPF inválido ou já existente"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remover um portador",
+        "parameters": [
+          {
+            "name": "cpf",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{11}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Portador removido com sucesso"
+          },
+          "404": {
+            "description": "Portador não encontrado"
+          }
+        }
+      }
+    },
+    "/contas": {
+      "post": {
+        "summary": "Criar uma nova conta digital Dock",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cpf": {
+                    "type": "string",
+                    "pattern": "^[0-9]{11}$"
+                  }
+                },
+                "required": ["cpf"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Conta criada com sucesso"
+          },
+          "400": {
+            "description": "CPF inválido ou portador não encontrado"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Fechar uma conta digital Dock",
+        "parameters": [
+          {
+            "name": "cpf",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{11}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Conta fechada com sucesso"
+          },
+          "404": {
+            "description": "Conta não encontrada"
+          }
+        }
+      },
+      "get": {
+        "summary": "Consultar dados da conta",
+        "parameters": [
+          {
+            "name": "cpf",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{11}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados da conta consultada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "saldo": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "numero": {
+                      "type": "string"
+                    },
+                    "agencia": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conta não encontrada"
+          }
+        }
+      }
+    },
+    "/contas/extrato": {
+      "get": {
+        "summary": "Consultar extrato da conta por período",
+        "parameters": [
+          {
+            "name": "cpf",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{11}$"
+            }
+          },
+          {
+            "name": "data_inicio",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "data_fim",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Extrato da conta consultado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "descricao": {
+                        "type": "string"
+                      },
+                      "valor": {
+                        "type": "number",
+                        "format": "float"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conta não encontrada"
+          }
+        }
+      }
+    },
+    "/contas/transacoes/saque": {
+      "post": {
+        "summary": "Sacar dinheiro da conta",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cpf": {
+                    "type": "string",
+                    "pattern": "^[0-9]{11}$"
+                  },
+                  "valor": {
+                    "type": "number",
+                    "format": "float",
+                    "minimum": 1,
+                    "maximum": 2000
+                  }
+                },
+                "required": ["cpf", "valor"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Saque realizado com sucesso"
+          },
+          "400": {
+            "description": "Saldo insuficiente ou limite diário ultrapassado"
+          },
+          "404": {
+            "description": "Conta não encontrada ou bloqueada"
+          }
+        }
+      }
+    },
+    "/contas/transacoes/deposito": {
+      "post": {
+        "summary": "Depositar dinheiro na conta",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cpf": {
+                    "type": "string",
+                    "pattern": "^[0-9]{11}$"
+                  },
+                  "valor": {
+                    "type": "number",
+                    "format": "float",
+                    "minimum": 1
+                  }
+                },
+                "required": ["cpf", "valor"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Depósito realizado com sucesso"
+          },
+          "404": {
+            "description": "Conta não encontrada"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}
