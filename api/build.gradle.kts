@@ -4,6 +4,7 @@ plugins {
     kotlin("jvm") version "2.0.20"
     application
     id("io.ktor.plugin") version "2.3.12"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
 }
 
 version = "1.0-SNAPSHOT"
