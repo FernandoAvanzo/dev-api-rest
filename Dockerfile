@@ -10,10 +10,10 @@ RUN gradle api:build
 
 FROM openjdk:21-jdk
 
+EXPOSE 9292:8080
+
 WORKDIR /app
 
 COPY --from=build /home/gradle/project/api/build/libs/*.jar /app/api.jar
-
-EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "/app/api.jar"]

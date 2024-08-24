@@ -1,13 +1,12 @@
 package api
 
+import api.presentation.configureRouting
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 
-
-@Suppress("UnusedReceiverParameter")
 fun Application.module() {
-
+    configureRouting()
 }
 
 fun main() {
