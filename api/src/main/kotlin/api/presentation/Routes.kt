@@ -7,8 +7,47 @@ import io.ktor.server.routing.*
 fun Application.configureRouting(){
     routing {
         route("/portadores"){
+            post {
+
+            }
+            delete {
+
+            }
+        }
+        route("/contas"){
+            post {
+
+            }
             get {
-                call.respondText("Hello World! agora foi")
+
+            }
+            delete {
+
+            }
+        }
+        route("/contas/bloqueio"){
+            post {
+
+            }
+        }
+        route("/contas/desbloqueio"){
+            post {
+
+            }
+        }
+        route("/transacoes/deposito"){
+            post {
+
+            }
+        }
+        route("/transacoes/saque"){
+            post {
+
+            }
+        }
+        route("/contas/extrato"){
+            get {
+
             }
         }
     }
