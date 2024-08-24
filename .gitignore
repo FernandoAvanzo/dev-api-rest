@@ -57,3 +57,4 @@ Thumbs.db
 /.gradle
 /.kotlin
 /.kotlin/*
+/gradlew.bat
