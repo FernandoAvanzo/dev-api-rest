@@ -5,6 +5,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -12,12 +13,11 @@ class RouteTests {
 
     @Test
     fun `test POST route - inserir novo portador`() = testApplication {
-        application {
-            module()
-        }
         val client = createClient {
             install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
-                json()
+                json(Json {
+                    ignoreUnknownKeys = true
+                })
             }
         }
         val response = client.post("/portadores") {
@@ -27,5 +27,4 @@ class RouteTests {
         assertEquals(HttpStatusCode.Created, response.status)
         assertEquals("Portador inserido com sucesso", response.bodyAsText())
     }
-
 }
