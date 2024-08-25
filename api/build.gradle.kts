@@ -20,13 +20,16 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:2.3.12")
     implementation("io.ktor:ktor-server-content-negotiation:2.3.12")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12")
+    implementation("io.insert-koin:koin-ktor:3.5.6")
+    implementation("io.insert-koin:koin-core:3.5.6")
 
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-tests:2.3.12")
     testImplementation("io.ktor:ktor-server-test-host:2.3.12")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.5.10")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:2.0.20")
     testImplementation("io.ktor:ktor-client-mock:2.3.12")
     testImplementation("io.ktor:ktor-client-content-negotiation:2.3.12")
+    testImplementation("io.insert-koin:koin-test-junit5:3.5.6")
 }
 
 tasks.test {
