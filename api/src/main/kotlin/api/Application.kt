@@ -1,13 +1,9 @@
 package api
 
-import api.presentation.routes.configureRouting
+import api.presentation.routes.module
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-
-fun Application.module() {
-    configureRouting()
-}
 
 fun main() {
     embeddedServer(

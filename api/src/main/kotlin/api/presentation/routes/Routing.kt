@@ -1,7 +1,9 @@
 package api.presentation.routes
 
+import api.domain.model.Portador
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
@@ -9,7 +11,8 @@ fun Application.configureRouting(){
     routing {
         route("/portadores"){
             post {
-
+                val request = call.receive<Portador>()
+                call.respond(HttpStatusCode.Created, "Portador inserido com sucesso")
             }
             delete {
 
@@ -57,4 +60,8 @@ fun Application.configureRouting(){
             }
         }
     }
+}
+
+fun Application.module() {
+    configureRouting()
 }

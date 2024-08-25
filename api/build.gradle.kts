@@ -23,6 +23,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-tests:2.3.12")
+    testImplementation("io.ktor:ktor-server-test-host:2.3.12")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.5.10")
     testImplementation("io.ktor:ktor-client-mock:2.3.12")
     testImplementation("io.ktor:ktor-client-content-negotiation:2.3.12")
@@ -42,11 +43,11 @@ java {
 }
 
 application {
-    mainClass.set("api.MainKt")
+    mainClass.set("api.ApplicationKt")
 }
 
 tasks.withType<Jar> {
     manifest {
-        attributes["Main-Class"] = "api.MainKt"
+        attributes["Main-Class"] = "api.ApplicationKt"
     }
 }

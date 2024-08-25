@@ -13,7 +13,7 @@ class RouteTests {
     @Test
     fun `test POST route - inserir novo portador`() = testApplication {
         application {
-
+            module()
         }
         val client = createClient {
             install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
