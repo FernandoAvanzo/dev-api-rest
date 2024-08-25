@@ -1,5 +1,7 @@
 package api.presentation.routes
 
+import api.application.command.handlers.CreatePortadorCommandHandler
+import api.di.apiModule
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
@@ -9,8 +11,11 @@ import io.ktor.server.response.*
 import io.ktor.server.request.*
 import api.domain.model.Portador
 import io.ktor.http.*
+import org.koin.ktor.ext.inject
+import org.koin.ktor.plugin.Koin
 
 fun Application.configureRouting(){
+    val createPortadorCommandHandler : CreatePortadorCommandHandler by inject()
     routing {
         route("/portadores"){
             post {
@@ -73,7 +78,14 @@ fun Application.configureSerialization() {
     }
 }
 
+fun Application.configureDI(){
+    install(Koin) {
+        modules(apiModule)
+    }
+}
+
 fun Application.module() {
     configureSerialization()
+    configureDI()
     configureRouting()
 }

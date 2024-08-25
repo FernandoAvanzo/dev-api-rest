@@ -6,10 +6,11 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
 import kotlinx.serialization.json.Json
+import org.koin.test.KoinTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class RouteTests {
+class RouteTests : KoinTest {
 
     @Test
     fun `test POST route - inserir novo portador`() = testApplication {
