@@ -27,7 +27,7 @@ dependencies {
     testImplementation("io.ktor:ktor-server-tests:2.3.12")
     testImplementation("io.ktor:ktor-server-test-host:2.3.12")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:2.0.20")
-    testImplementation("io.ktor:ktor-client-mock:2.3.12")
+    testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("io.ktor:ktor-client-content-negotiation:2.3.12")
     testImplementation("io.insert-koin:koin-test-junit5:3.5.6")
 }

@@ -10,6 +10,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.request.*
 import api.domain.model.Portador
+import api.domain.model.PortadorRulesException
 import io.ktor.http.*
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
@@ -19,8 +20,23 @@ fun Application.configureRouting(){
     routing {
         route("/portadores"){
             post {
-                call.receive<Portador>()
-                call.respond(HttpStatusCode.Created, "Portador inserido com sucesso")
+                createPortadorCommandHandler.runCatching {
+                    handle(
+                        command = call.receive<Portador>()
+                    )
+                    call.respond(HttpStatusCode.Created, "Portador inserido com sucesso")
+                }.onFailure {
+                    when(it){
+                        is PortadorRulesException -> call.respond(
+                            HttpStatusCode.UnprocessableEntity,
+                            it.localizedMessage
+                        )
+                        else -> call.respond(
+                            HttpStatusCode.InternalServerError,
+                            it.localizedMessage
+                        )
+                    }
+                }
             }
             delete {
 
