@@ -329,6 +329,17 @@
           }
         }
       }
+    },
+    "/health/check": {
+      "get": {
+        "summary": "Checks the health status of the server and container.",
+        "responses":{
+          "200" : {
+            "description": "Server is healthy",
+            "text/string": ""
+          }
+        }
+      }
     }
   },
   "components": {
