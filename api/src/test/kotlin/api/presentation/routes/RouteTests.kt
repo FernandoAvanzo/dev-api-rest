@@ -240,7 +240,6 @@ class RouteTests : KoinTest {
             setBody("""{"portador":{"cpf":"009.563.109-74"}}""")
         }
 
-        // Case 1: Successful deposit
         val depositSuccessResponse = client.post("/transacoes/deposito") {
             contentType(ContentType.Application.Json)
             setBody("""
@@ -251,7 +250,12 @@ class RouteTests : KoinTest {
         assertEquals(HttpStatusCode.OK, depositSuccessResponse.status)
         assertEquals("Depósito realizado com sucesso", depositSuccessResponse.bodyAsText())
 
-        // Case 2: Account blocked or inactive
+        client.post("/contas/bloqueio") {
+            url {
+                parameters.append("cpf", "009.563.109-74")
+            }
+        }
+
         val depositBlockedResponse = client.post("/transacoes/deposito") {
             contentType(ContentType.Application.Json)
             setBody("""
@@ -262,11 +266,10 @@ class RouteTests : KoinTest {
         assertEquals(HttpStatusCode.BadRequest, depositBlockedResponse.status)
         assertEquals("Conta bloqueada ou inativa", depositBlockedResponse.bodyAsText())
 
-        // Case 3: Account not found
         val depositNotFoundResponse = client.post("/transacoes/deposito") {
             contentType(ContentType.Application.Json)
             setBody("""
-                {"conta":{"portador":{"cpf":"009.563.109-74"}}, 
+                {"conta":{"portador":{"cpf":"069.731.949-07"}}, 
                 "valor":100.0}
                 """.trimIndent())
         }

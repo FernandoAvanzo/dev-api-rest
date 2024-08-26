@@ -164,6 +164,10 @@ fun Application.configureRouting(){
                             HttpStatusCode.NotFound,
                             "Conta não encontrada"
                         )
+                        is ContaInactiveException -> call.respond(
+                            HttpStatusCode.BadRequest,
+                            it.localizedMessage
+                        )
                         is CpfNullException -> call.respond(
                             HttpStatusCode.BadRequest,
                             it.localizedMessage

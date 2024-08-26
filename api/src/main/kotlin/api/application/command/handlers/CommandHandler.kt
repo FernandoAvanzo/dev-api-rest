@@ -68,16 +68,18 @@ class CreateDepositoCommandHandler(
             findByCpf(
                 cpf = it
             )?.let { conta ->
-                val depositValue = command.second ?: throw ExtractWrongInputException("wrong value")
-                val deposit = Extrato(
-                    conta = conta.copy(
-                        saldo = conta.saldo + depositValue
-                    ),
-                    valor = depositValue,
-                    operacao = Operacao.DEPOSITO
-                )
-                updateConta(deposit.conta)
-                extratoRepository.deposit(deposit)
+                conta.takeIf { active-> active.bloqueado.not() }?.let {
+                    val depositValue = command.second ?: throw ExtractWrongInputException("wrong value")
+                    val deposit = Extrato(
+                        conta = conta.copy(
+                            saldo = conta.saldo + depositValue
+                        ),
+                        valor = depositValue,
+                        operacao = Operacao.DEPOSITO
+                    )
+                    updateConta(deposit.conta)
+                    extratoRepository.deposit(deposit)
+                } ?: throw ContaInactiveException("Conta bloqueada ou inativa")
             } ?: throw ContaNotFoundException("Conta não encontrada")
         } ?: throw CpfNullException("CPF not found.")
     }
