@@ -1,7 +1,9 @@
 package api.presentation.routes
 
+import api.application.command.handlers.BlockContaCommandHandler
 import api.application.command.handlers.CreateContaCommandHandler
 import api.application.command.handlers.CreatePortadorCommandHandler
+import api.application.command.handlers.UnblockContaCommandHandler
 import api.application.query.handlers.GetContaQueryHandler
 import api.di.apiModule
 import api.domain.ContaNotFoundException
@@ -25,6 +27,8 @@ fun Application.configureRouting(){
     val createPortadorCommandHandler : CreatePortadorCommandHandler by inject()
     val createContaCommandHandler: CreateContaCommandHandler by inject()
     val getContaQueryHandler: GetContaQueryHandler by inject()
+    val blockContaCommandHandler :BlockContaCommandHandler by inject()
+    val unblockContaCommandHandler :UnblockContaCommandHandler by inject()
 
     routing {
         route("/portadores"){
@@ -102,14 +106,50 @@ fun Application.configureRouting(){
 
             }
         }
-        route("/contas/bloqueio"){
+        route("/contas/bloqueio") {
             post {
-
+                blockContaCommandHandler.runCatching {
+                    handle(call.request.queryParameters["cpf"])
+                    call.respond(HttpStatusCode.OK, "Conta bloqueada com sucesso")
+                }.onFailure {
+                    when (it) {
+                        is CpfNullException -> call.respond(
+                            HttpStatusCode.BadRequest,
+                            it.localizedMessage
+                        )
+                        is ContaNotFoundException -> call.respond(
+                            HttpStatusCode.NotFound,
+                            "Conta não encontrada"
+                        )
+                        else -> call.respond(
+                            HttpStatusCode.InternalServerError,
+                            "Internal server error"
+                        )
+                    }
+                }
             }
         }
         route("/contas/desbloqueio"){
             post {
-
+                unblockContaCommandHandler.runCatching {
+                    handle(call.request.queryParameters["cpf"])
+                    call.respond(HttpStatusCode.OK, "Conta desbloqueada com sucesso")
+                }.onFailure {
+                    when (it) {
+                        is CpfNullException -> call.respond(
+                            HttpStatusCode.BadRequest,
+                            it.localizedMessage
+                        )
+                        is ContaNotFoundException -> call.respond(
+                            HttpStatusCode.NotFound,
+                            "Conta não encontrada"
+                        )
+                        else -> call.respond(
+                            HttpStatusCode.InternalServerError,
+                            "Internal server error"
+                        )
+                    }
+                }
             }
         }
         route("/transacoes/deposito"){

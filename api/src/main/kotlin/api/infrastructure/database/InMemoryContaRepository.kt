@@ -13,4 +13,14 @@ class InMemoryContaRepository :ContaRepository {
     override fun findByCpf(cpf: String): Conta? {
         return contas.find { it.portador.cpf == cpf }
     }
+
+    override fun blockAccount(conta: Conta) {
+        contas.removeIf { it.portador.cpf == conta.portador.cpf }
+        contas.add(conta.copy(bloqueado = true))
+    }
+
+    override fun unBlockAccount(conta: Conta) {
+        contas.removeIf { it.portador.cpf == conta.portador.cpf }
+        contas.add(conta.copy(bloqueado = false))
+    }
 }

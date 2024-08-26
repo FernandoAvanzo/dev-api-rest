@@ -1,7 +1,9 @@
 package api.di
 
+import api.application.command.handlers.BlockContaCommandHandler
 import api.application.command.handlers.CreateContaCommandHandler
 import api.application.command.handlers.CreatePortadorCommandHandler
+import api.application.command.handlers.UnblockContaCommandHandler
 import api.application.query.handlers.GetContaQueryHandler
 import api.domain.repositories.ContaRepository
 import api.domain.repositories.PortadorRepository
@@ -15,4 +17,6 @@ val apiModule = module {
     single { CreatePortadorCommandHandler(get()) }
     single { CreateContaCommandHandler(get(),get()) }
     single { GetContaQueryHandler(get()) }
+    single { BlockContaCommandHandler(get(),get()) }
+    single { UnblockContaCommandHandler(get(),get()) }
 }
