@@ -1,3 +1,3 @@
-package api.domain.model
+package api.domain
 
 class PortadorRulesException(message: String) : Exception(message)

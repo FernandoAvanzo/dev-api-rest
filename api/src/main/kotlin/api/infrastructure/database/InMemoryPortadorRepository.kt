@@ -1,8 +1,8 @@
 package api.infrastructure.database
 
 import api.domain.model.Portador
-import api.domain.model.PortadorRulesException
-import api.domain.model.isValidCPF
+import api.domain.PortadorRulesException
+import api.domain.isValidCPF
 import api.domain.repositories.PortadorRepository
 
 class InMemoryPortadorRepository : PortadorRepository {

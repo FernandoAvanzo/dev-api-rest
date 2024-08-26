@@ -10,7 +10,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.request.*
 import api.domain.model.Portador
-import api.domain.model.PortadorRulesException
+import api.domain.PortadorRulesException
 import io.ktor.http.*
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin

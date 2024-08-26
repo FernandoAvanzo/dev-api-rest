@@ -1,4 +1,4 @@
-package api.domain.model
+package api.domain
 
 
 fun String.isValidCPF(): Boolean {
