@@ -11,7 +11,7 @@ class InMemoryContaRepository :ContaRepository {
         contas.add(conta)
     }
 
-    override fun findByPortador(portador: Portador): Conta? {
-        return contas.find { it.portador.cpf == portador.cpf }
+    override fun findByCpf(cpf: String): Conta? {
+        return contas.find { it.portador.cpf == cpf }
     }
 }

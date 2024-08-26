@@ -5,5 +5,5 @@ import api.domain.model.Portador
 
 interface ContaRepository {
     fun create(conta: Conta)
-    fun findByPortador(portador: Portador): Conta?
+    fun findByCpf(cpf: String): Conta?
 }

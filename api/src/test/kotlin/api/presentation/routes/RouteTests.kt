@@ -127,10 +127,16 @@ class RouteTests : KoinTest {
                 })
             }
         }
-
         val contaResponse = client.post("/contas") {
             contentType(ContentType.Application.Json)
-            setBody("""{"portador":{"cpf":"009.563.109-74", "nome":"Fulano de Tal"}}""")
+            setBody(
+                """
+                    {"portador":    {"cpf":"009.563.109-74", 
+                                     "nome":"Fulano de Tal"},
+                    "agencia": "0001", 
+                    "numero": "1234567890"}
+                    """
+            )
         }
         assertEquals(HttpStatusCode.Created, contaResponse.status)
 
@@ -143,13 +149,7 @@ class RouteTests : KoinTest {
 
         assertEquals(HttpStatusCode.OK, response.status)
         val responseBody = response.bodyAsText()
-        val expectedResponse = """
-            {
-                "saldo": 0.0,
-                "numero": "1234567890",
-                "agencia": "0001"
-            }
-            """
-        assertEquals(expectedResponse.trimIndent(), responseBody)
+        val expectedResponse = "{saldo=0.0, numero=1234567890, agencia=0001}"
+        assertEquals(expectedResponse, responseBody)
     }
 }

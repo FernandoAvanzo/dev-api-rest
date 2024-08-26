@@ -2,8 +2,11 @@ package api.presentation.routes
 
 import api.application.command.handlers.CreateContaCommandHandler
 import api.application.command.handlers.CreatePortadorCommandHandler
+import api.application.query.handlers.GetContaQueryHandler
 import api.di.apiModule
+import api.domain.ContaNotFoundException
 import api.domain.ContaRulesException
+import api.domain.CpfNullException
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
@@ -21,6 +24,8 @@ import org.koin.ktor.plugin.Koin
 fun Application.configureRouting(){
     val createPortadorCommandHandler : CreatePortadorCommandHandler by inject()
     val createContaCommandHandler: CreateContaCommandHandler by inject()
+    val getContaQueryHandler: GetContaQueryHandler by inject()
+
     routing {
         route("/portadores"){
             post {
@@ -66,25 +71,32 @@ fun Application.configureRouting(){
                 }
             }
             get {
-//                val cpf = call.request.queryParameters["cpf"]
-//                if (cpf == null) {
-//                    call.respond(HttpStatusCode.BadRequest, "Query parameter 'cpf' is required")
-//                    return@get
-//                }
-//                val conta = createContaCommandHandler.portadorRepository.findByCpf(cpf)?.let {
-//                    createContaCommandHandler.contaRepository.findByPortador(it)
-//                }
-//                if (conta == null) {
-//                    call.respond(HttpStatusCode.NotFound, "Conta not found")
-//                } else {
-//                    call.respond(
-//                        HttpStatusCode.OK, mapOf(
-//                            "saldo" to conta.saldo,
-//                            "numero" to conta.numero,
-//                            "agencia" to conta.agencia
-//                        )
-//                    )
-//                }
+                getContaQueryHandler.runCatching {
+                    handle(
+                        call.request.queryParameters["cpf"]
+                    ).apply {
+                        call.respond(
+                        HttpStatusCode.OK, mapOf(
+                            "saldo" to saldo,
+                            "numero" to numero,
+                            "agencia" to agencia
+                        ).toString())
+                    }
+                }.onFailure {
+                    when(it){
+                        is CpfNullException -> call.respond(
+                            HttpStatusCode.BadRequest,
+                            it.localizedMessage
+                        )
+                        is ContaNotFoundException -> call.respond(
+                            HttpStatusCode.NotFound, "Conta not found"
+                        )
+                        else -> call.respond(
+                            HttpStatusCode.InternalServerError,
+                            "Internal server error"
+                        )
+                    }
+                }
             }
             delete {
 
