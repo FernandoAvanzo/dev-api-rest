@@ -2,7 +2,7 @@ package api.domain.repositories
 
 import api.domain.model.Transacao
 
-interface ExtratoRepository {
+interface TransacaoRepository {
     fun deposit(transacao: Transacao)
     fun withdraw(transacao: Transacao)
 }

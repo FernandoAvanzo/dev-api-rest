@@ -1,9 +1,9 @@
 package api.infrastructure.database
 
 import api.domain.model.Transacao
-import api.domain.repositories.ExtratoRepository
+import api.domain.repositories.TransacaoRepository
 
-class InMemoryExtratoRepository : ExtratoRepository {
+class InMemoryTransacaoRepository : TransacaoRepository {
     private val transacaoRegistry = mutableSetOf<Transacao>()
 
     override fun deposit(transacao: Transacao){

@@ -7,7 +7,7 @@ import api.domain.model.Transacao
 import api.domain.model.Operacao
 import api.domain.model.Portador
 import api.domain.repositories.ContaRepository
-import api.domain.repositories.ExtratoRepository
+import api.domain.repositories.TransacaoRepository
 import api.domain.repositories.PortadorRepository
 
 class CreateContaCommandHandler(
@@ -61,7 +61,7 @@ class CreatePortadorCommandHandler(
 
 class CreateDepositoCommandHandler(
     private val contaRepository: ContaRepository,
-    private val extratoRepository: ExtratoRepository
+    private val transacaoRepository: TransacaoRepository
 ){
     fun handle(command: Pair<String?, Double?>) = contaRepository.run{
         command.first?.let {
@@ -78,7 +78,7 @@ class CreateDepositoCommandHandler(
                         operacao = Operacao.DEPOSITO
                     )
                     updateConta(deposit.conta)
-                    extratoRepository.deposit(deposit)
+                    transacaoRepository.deposit(deposit)
                 } ?: throw ContaInactiveException("Conta bloqueada ou inativa")
             } ?: throw ContaNotFoundException("Conta não encontrada")
         } ?: throw CpfNullException("CPF not found.")
@@ -87,7 +87,7 @@ class CreateDepositoCommandHandler(
 
 class CreateSaqueCommandHandler(
     private val contaRepository: ContaRepository,
-    private val extratoRepository: ExtratoRepository
+    private val transacaoRepository: TransacaoRepository
 ){
     fun handle(command: Pair<String?, Double?>) = contaRepository.run{
         command.first?.let {
@@ -107,7 +107,7 @@ class CreateSaqueCommandHandler(
                             operacao = Operacao.SAQUE
                         )
                         updateConta(withdraw.conta)
-                        extratoRepository.withdraw(withdraw)
+                        transacaoRepository.withdraw(withdraw)
                     } ?: throw ContaInactiveException("Conta bloqueada ou inativa")
                 } ?: throw BalanceNegativeException("Saldo insuficiente, conta bloqueada ou inativa")
             } ?: throw ContaNotFoundException("Conta não encontrada")
