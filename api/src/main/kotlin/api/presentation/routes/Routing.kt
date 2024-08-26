@@ -49,9 +49,6 @@ fun Application.configureRouting() {
                     }
                 }
             }
-            delete {
-
-            }
         }
         route("/contas") {
             post {
@@ -104,9 +101,6 @@ fun Application.configureRouting() {
                         )
                     }
                 }
-            }
-            delete {
-
             }
         }
         route("/contas/bloqueio") {

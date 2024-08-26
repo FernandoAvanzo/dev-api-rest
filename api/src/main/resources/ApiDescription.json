@@ -37,27 +37,6 @@
           }
         }
       },
-      "delete": {
-        "summary": "Remover portador",
-        "parameters": [
-          {
-            "name": "cpf",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Portador removido com sucesso"
-          },
-          "404": {
-            "description": "Portador não encontrado"
-          }
-        }
-      }
     },
     "/contas": {
       "post": {
@@ -126,27 +105,6 @@
           }
         }
       },
-      "delete": {
-        "summary": "Fechar conta",
-        "parameters": [
-          {
-            "name": "cpf",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Conta fechada com sucesso"
-          },
-          "404": {
-            "description": "Conta não encontrada"
-          }
-        }
-      }
     },
     "/contas/bloqueio": {
       "post": {
