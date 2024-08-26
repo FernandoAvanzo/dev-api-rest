@@ -9,5 +9,6 @@ data class Conta(
     val portador: Portador,
     val agencia: String = generateRandomFourDigit(),
     val numero: String = generateRandomSixDigit(),
-    val saldo: Double = 0.0
+    val saldo: Double = 0.0,
+    val bloqueado: Boolean = false
 )
