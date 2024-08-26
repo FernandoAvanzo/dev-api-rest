@@ -23,7 +23,10 @@
                     "type": "string"
                   }
                 },
-                "required": ["nomeCompleto", "cpf"]
+                "required": [
+                  "nomeCompleto",
+                  "cpf"
+                ]
               }
             }
           }
@@ -52,7 +55,9 @@
                     "type": "string"
                   }
                 },
-                "required": ["cpf"]
+                "required": [
+                  "cpf"
+                ]
               }
             }
           }
@@ -162,14 +167,23 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "cpf": {
-                    "type": "string"
+                  "conta": {
+                    "type": "object",
+                    "portador": {
+                      "type": "object",
+                      "cpf": {
+                        "type": "string"
+                      }
+                    }
                   },
                   "valor": {
                     "type": "number"
                   }
                 },
-                "required": ["cpf", "valor"]
+                "required": [
+                  "conta",
+                  "valor"
+                ]
               }
             }
           }
@@ -197,14 +211,23 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "cpf": {
-                    "type": "string"
+                  "conta": {
+                    "type": "object",
+                    "portador": {
+                      "type": "object",
+                      "cpf": {
+                        "type": "string"
+                      }
+                    }
                   },
                   "valor": {
                     "type": "number"
                   }
                 },
-                "required": ["cpf", "valor"]
+                "required": [
+                  "conta",
+                  "valor"
+                ]
               }
             }
           }
@@ -291,8 +314,8 @@
     "/health/check": {
       "get": {
         "summary": "Checks the health status of the server and container.",
-        "responses":{
-          "200" : {
+        "responses": {
+          "200": {
             "description": "Server is healthy",
             "text/string": ""
           }
@@ -312,7 +335,10 @@
             "type": "string"
           }
         },
-        "required": ["nomeCompleto", "cpf"]
+        "required": [
+          "nomeCompleto",
+          "cpf"
+        ]
       },
       "Conta": {
         "type": "object",
@@ -333,7 +359,13 @@
             "type": "boolean"
           }
         },
-        "required": ["cpf", "numero", "agencia", "saldo", "bloqueada"]
+        "required": [
+          "cpf",
+          "numero",
+          "agencia",
+          "saldo",
+          "bloqueada"
+        ]
       },
       "Transacao": {
         "type": "object",
@@ -345,7 +377,10 @@
             "type": "number"
           }
         },
-        "required": ["cpf", "valor"]
+        "required": [
+          "cpf",
+          "valor"
+        ]
       },
       "Extrato": {
         "type": "object",
@@ -364,7 +399,12 @@
             "type": "string"
           }
         },
-        "required": ["data", "tipo", "valor", "descricao"]
+        "required": [
+          "data",
+          "tipo",
+          "valor",
+          "descricao"
+        ]
       }
     }
   }
