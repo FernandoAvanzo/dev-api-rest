@@ -1,17 +1,16 @@
 package api.infrastructure.database
 
-import api.domain.model.Conta
-import api.domain.model.Extrato
+import api.domain.model.Transacao
 import api.domain.repositories.ExtratoRepository
 
 class InMemoryExtratoRepository : ExtratoRepository {
-    private val extratoRegistry = mutableSetOf<Extrato>()
+    private val transacaoRegistry = mutableSetOf<Transacao>()
 
-    override fun deposit(extrato: Extrato){
-        extratoRegistry.add(extrato)
+    override fun deposit(transacao: Transacao){
+        transacaoRegistry.add(transacao)
     }
 
-    override fun withdraw(extrato: Extrato) {
-        extratoRegistry.add(extrato)
+    override fun withdraw(transacao: Transacao) {
+        transacaoRegistry.add(transacao)
     }
 }

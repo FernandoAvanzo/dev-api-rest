@@ -3,7 +3,7 @@ package api.application.command.handlers
 import api.application.query.handlers.GetContaQueryHandler
 import api.domain.*
 import api.domain.model.Conta
-import api.domain.model.Extrato
+import api.domain.model.Transacao
 import api.domain.model.Operacao
 import api.domain.model.Portador
 import api.domain.repositories.ContaRepository
@@ -70,7 +70,7 @@ class CreateDepositoCommandHandler(
             )?.let { conta ->
                 conta.takeIf { active-> active.bloqueado.not() }?.let {
                     val depositValue = command.second ?: throw ExtractWrongInputException("wrong value")
-                    val deposit = Extrato(
+                    val deposit = Transacao(
                         conta = conta.copy(
                             saldo = conta.saldo + depositValue
                         ),
@@ -99,7 +99,7 @@ class CreateSaqueCommandHandler(
                     (conta.saldo - withdrawInput).takeIf{
                             withdrawPositive -> withdrawPositive >= 0
                     }?.let { withdrawValue ->
-                        val withdraw = Extrato(
+                        val withdraw = Transacao(
                             conta = conta.copy(
                                 saldo = withdrawValue
                             ),

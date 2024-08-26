@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class Extrato(
+data class Transacao(
     val conta: Conta,
     val valor: Double,
     val operacao: Operacao = Operacao.DEFAULT,

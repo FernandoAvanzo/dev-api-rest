@@ -13,7 +13,7 @@ import io.ktor.server.response.*
 import io.ktor.server.request.*
 import api.domain.model.Portador
 import api.domain.model.Conta
-import api.domain.model.Extrato
+import api.domain.model.Transacao
 import io.ktor.http.*
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
@@ -162,7 +162,7 @@ fun Application.configureRouting() {
         route("/transacoes/deposito") {
             post {
                 createDepositoCommandHandler.runCatching {
-                    val request = call.receive<Extrato>()
+                    val request = call.receive<Transacao>()
                     handle(
                         command = request.conta.portador.cpf to
                                 request.valor
@@ -199,7 +199,7 @@ fun Application.configureRouting() {
         route("/transacoes/saque") {
             post {
                 createSaqueCommandHandler.runCatching {
-                    val request = call.receive<Extrato>()
+                    val request = call.receive<Transacao>()
                     handle(
                         command = request.conta.portador.cpf to
                                 request.valor
