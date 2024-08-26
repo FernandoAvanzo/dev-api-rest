@@ -276,4 +276,90 @@ class RouteTests : KoinTest {
         assertEquals(HttpStatusCode.NotFound, depositNotFoundResponse.status)
         assertEquals("Conta não encontrada", depositNotFoundResponse.bodyAsText())
     }
+
+
+    @Test
+    fun `test POST route - sacar na conta`() = testApplication {
+        val client = createClient {
+            install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                })
+            }
+        }
+
+        client.post("/contas") {
+            contentType(ContentType.Application.Json)
+            setBody("""{"portador":{"cpf":"009.563.109-74"}}""")
+        }
+
+        val depositoResponse = client.post("/transacoes/deposito") {
+            contentType(ContentType.Application.Json)
+            setBody(
+                """
+            {"conta":{"portador":{"cpf":"009.563.109-74"}}, "valor":200.0}
+            """.trimIndent()
+            )
+        }
+        assertEquals(HttpStatusCode.OK, depositoResponse.status)
+
+        // Successful withdrawal
+        val withdrawalSuccessResponse = client.post("/transacoes/saque") {
+            contentType(ContentType.Application.Json)
+            setBody(
+                """
+            {"conta":{"portador":{"cpf":"009.563.109-74"}}, "valor":100.0}
+            """.trimIndent()
+            )
+        }
+        assertEquals(HttpStatusCode.OK, withdrawalSuccessResponse.status)
+        assertEquals("Saque realizado com sucesso", withdrawalSuccessResponse.bodyAsText())
+
+        // Withdrawal from a blocked account
+        client.post("/contas/bloqueio") {
+            url {
+                parameters.append("cpf", "009.563.109-74")
+            }
+        }
+        val withdrawalBlockedResponse = client.post("/transacoes/saque") {
+            contentType(ContentType.Application.Json)
+            setBody(
+                """
+            {"conta":{"portador":{"cpf":"009.563.109-74"}}, "valor":50.0}
+            """.trimIndent()
+            )
+        }
+        assertEquals(HttpStatusCode.BadRequest, withdrawalBlockedResponse.status)
+        assertEquals("Saldo insuficiente, conta bloqueada ou inativa", withdrawalBlockedResponse.bodyAsText())
+
+        // Withdrawal with insufficient balance
+        client.post("/contas/desbloqueio") {
+            url {
+                parameters.append("cpf", "009.563.109-74")
+            }
+        }
+        val withdrawalInsufficientFundsResponse = client.post("/transacoes/saque") {
+            contentType(ContentType.Application.Json)
+            setBody(
+                """
+            {"conta":{"portador":{"cpf":"009.563.109-74"}}, "valor":200.0}
+            """.trimIndent()
+            )
+        }
+        assertEquals(HttpStatusCode.BadRequest, withdrawalInsufficientFundsResponse.status)
+        assertEquals("Saldo insuficiente, conta bloqueada ou inativa", withdrawalInsufficientFundsResponse.bodyAsText())
+
+        // Withdrawal from a non-existent account
+        val withdrawalNotFoundResponse = client.post("/transacoes/saque") {
+            contentType(ContentType.Application.Json)
+            setBody(
+                """
+            {"conta":{"portador":{"cpf":"000.000.000-00"}}, "valor":100.0}
+            """.trimIndent()
+            )
+        }
+        assertEquals(HttpStatusCode.NotFound, withdrawalNotFoundResponse.status)
+        assertEquals("Conta não encontrada", withdrawalNotFoundResponse.bodyAsText())
+    }
+    
 }
