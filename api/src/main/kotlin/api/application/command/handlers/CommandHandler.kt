@@ -1,10 +1,7 @@
 package api.application.command.handlers
 
 import api.application.query.handlers.GetContaQueryHandler
-import api.domain.BalanceNegativeException
-import api.domain.ContaNotFoundException
-import api.domain.ContaRulesException
-import api.domain.CpfNullException
+import api.domain.*
 import api.domain.model.Conta
 import api.domain.model.Extrato
 import api.domain.model.Operacao
@@ -66,21 +63,22 @@ class CreateDepositoCommandHandler(
     private val contaRepository: ContaRepository,
     private val extratoRepository: ExtratoRepository
 ){
-    fun handle(command: Pair<String?, Double>) = contaRepository.run{
+    fun handle(command: Pair<String?, Double?>) = contaRepository.run{
         command.first?.let {
             findByCpf(
                 cpf = it
             )?.let { conta ->
+                val depositValue = command.second ?: throw ExtractWrongInputException("wrong value")
                 val deposit = Extrato(
                     conta = conta.copy(
-                        saldo = conta.saldo + command.second
+                        saldo = conta.saldo + depositValue
                     ),
-                    valor = command.second,
+                    valor = depositValue,
                     operacao = Operacao.DEPOSITO
                 )
                 updateConta(deposit.conta)
                 extratoRepository.deposit(deposit)
-            } ?: throw ContaNotFoundException("Conta with CPF ${command.first} not found.")
+            } ?: throw ContaNotFoundException("Conta não encontrada")
         } ?: throw CpfNullException("CPF not found.")
     }
 }
@@ -89,19 +87,20 @@ class CreateSaqueCommandHandler(
     private val contaRepository: ContaRepository,
     private val extratoRepository: ExtratoRepository
 ){
-    fun handle(command: Pair<String?, Double>) = contaRepository.run{
+    fun handle(command: Pair<String?, Double?>) = contaRepository.run{
         command.first?.let {
             findByCpf(
                 cpf = it
             )?.let { conta ->
-                (conta.saldo - command.second).takeIf{
+                val withdrawInput = command.second ?: throw ExtractWrongInputException("wrong value")
+                (conta.saldo - withdrawInput).takeIf{
                         withdrawPositive -> withdrawPositive >= 0
                 }?.let { withdrawValue ->
                     val withdraw = Extrato(
                         conta = conta.copy(
                             saldo = withdrawValue
                         ),
-                        valor = command.second,
+                        valor = withdrawInput,
                         operacao = Operacao.SAQUE
                     )
                     updateConta(withdraw.conta)

@@ -1,14 +1,9 @@
 package api.presentation.routes
 
-import api.application.command.handlers.BlockContaCommandHandler
-import api.application.command.handlers.CreateContaCommandHandler
-import api.application.command.handlers.CreatePortadorCommandHandler
-import api.application.command.handlers.UnblockContaCommandHandler
+import api.application.command.handlers.*
 import api.application.query.handlers.GetContaQueryHandler
 import api.di.apiModule
-import api.domain.ContaNotFoundException
-import api.domain.ContaRulesException
-import api.domain.CpfNullException
+import api.domain.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
@@ -17,8 +12,8 @@ import io.ktor.server.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.request.*
 import api.domain.model.Portador
-import api.domain.PortadorRulesException
 import api.domain.model.Conta
+import api.domain.model.Extrato
 import io.ktor.http.*
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
@@ -29,6 +24,7 @@ fun Application.configureRouting(){
     val getContaQueryHandler: GetContaQueryHandler by inject()
     val blockContaCommandHandler :BlockContaCommandHandler by inject()
     val unblockContaCommandHandler :UnblockContaCommandHandler by inject()
+    val createDepositoCommandHandler : CreateDepositoCommandHandler by inject()
 
     routing {
         route("/portadores"){
@@ -154,28 +150,29 @@ fun Application.configureRouting(){
         }
         route("/transacoes/deposito") {
             post {
-                val request = call.receive<Map<String, Any>>()
-                val cpf = request["cpf"] as? String
-                val valor = request["valor"] as? Double
-
-                if (cpf.isNullOrEmpty() || valor == null) {
-                    call.respond(HttpStatusCode.BadRequest, "CPF ou valor do depósito não fornecido")
-                    return@post
-                }
-
-                getContaQueryHandler.runCatching {
-                    handle(cpf)
-                }.onSuccess { conta ->
-                    if (conta.bloqueado) {
-                        call.respond(HttpStatusCode.BadRequest, "Conta bloqueada")
-                    } else {
-                        contaRepository.depositAccount(conta, valor)
-                        call.respond(HttpStatusCode.OK, "Depósito realizado com sucesso")
-                    }
+                createDepositoCommandHandler.runCatching {
+                    val request = call.receive<Extrato>()
+                    handle(
+                        command = request.conta.portador.cpf to
+                                request.valor
+                    )
+                }.onSuccess {
+                    call.respond(HttpStatusCode.OK, "Depósito realizado com sucesso")
                 }.onFailure {
                     when (it) {
-                        is ContaNotFoundException -> call.respond(HttpStatusCode.NotFound, "Conta não encontrada")
-                        else -> call.respond(HttpStatusCode.InternalServerError, "Erro interno do servidor")
+                        is ContaNotFoundException -> call.respond(
+                            HttpStatusCode.NotFound,
+                            "Conta não encontrada"
+                        )
+                        is CpfNullException -> call.respond(
+                            HttpStatusCode.BadRequest,
+                            it.localizedMessage
+                        )
+                        is ExtractWrongInputException -> call.respond(
+                            HttpStatusCode.BadRequest,
+                            it.localizedMessage
+                        )
+                        else -> throw it
                     }
                 }
             }

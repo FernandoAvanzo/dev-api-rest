@@ -235,10 +235,18 @@ class RouteTests : KoinTest {
             }
         }
 
+        client.post("/contas") {
+            contentType(ContentType.Application.Json)
+            setBody("""{"portador":{"cpf":"009.563.109-74"}}""")
+        }
+
         // Case 1: Successful deposit
         val depositSuccessResponse = client.post("/transacoes/deposito") {
             contentType(ContentType.Application.Json)
-            setBody("""{"cpf":"009.563.109-74", "valor":100.0}""")
+            setBody("""
+                {"conta":{"portador":{"cpf":"009.563.109-74"}}, 
+                "valor":100.0}
+                """.trimIndent())
         }
         assertEquals(HttpStatusCode.OK, depositSuccessResponse.status)
         assertEquals("Depósito realizado com sucesso", depositSuccessResponse.bodyAsText())
@@ -246,7 +254,10 @@ class RouteTests : KoinTest {
         // Case 2: Account blocked or inactive
         val depositBlockedResponse = client.post("/transacoes/deposito") {
             contentType(ContentType.Application.Json)
-            setBody("""{"cpf":"009.563.109-74", "valor":100.0}""")
+            setBody("""
+                {"conta":{"portador":{"cpf":"009.563.109-74"}}, 
+                "valor":100.0}
+                """.trimIndent())
         }
         assertEquals(HttpStatusCode.BadRequest, depositBlockedResponse.status)
         assertEquals("Conta bloqueada ou inativa", depositBlockedResponse.bodyAsText())
@@ -254,7 +265,10 @@ class RouteTests : KoinTest {
         // Case 3: Account not found
         val depositNotFoundResponse = client.post("/transacoes/deposito") {
             contentType(ContentType.Application.Json)
-            setBody("""{"cpf":"000.000.000-00", "valor":100.0}""")
+            setBody("""
+                {"conta":{"portador":{"cpf":"009.563.109-74"}}, 
+                "valor":100.0}
+                """.trimIndent())
         }
         assertEquals(HttpStatusCode.NotFound, depositNotFoundResponse.status)
         assertEquals("Conta não encontrada", depositNotFoundResponse.bodyAsText())
