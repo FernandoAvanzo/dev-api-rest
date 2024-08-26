@@ -4,7 +4,9 @@ import api.domain.model.Conta
 import api.domain.repositories.ContaRepository
 
 class InMemoryContaRepository :ContaRepository {
+    private val contas = mutableSetOf<Conta>()
+
     override fun create(conta: Conta) {
-        TODO("Not yet implemented")
+        contas.add(conta)
     }
 }

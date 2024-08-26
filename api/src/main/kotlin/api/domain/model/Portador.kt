@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Portador(
     val cpf: String,
-    val nome: String
+    val nome: String = ""
 )

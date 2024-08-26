@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Conta(
-    val cpfPortador: String,
+    val portador: Portador,
     val agencia: String = generateRandomFourDigit(),
     val numero: String = generateRandomSixDigit(),
     val saldo: Double = 0.0

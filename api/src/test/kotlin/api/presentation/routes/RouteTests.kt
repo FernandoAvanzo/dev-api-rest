@@ -31,7 +31,7 @@ class RouteTests : KoinTest {
 
 
     @Test
-    fun `test POST route - inserir portador com CPF inválido`() = testApplication {
+    fun `test POST route - inserir portador com CPF invalido`() = testApplication {
         val client = createClient {
             install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
                 json(Json {
@@ -49,7 +49,7 @@ class RouteTests : KoinTest {
 
 
     @Test
-    fun `test POST route - inserir portador com CPF já existente`() = testApplication {
+    fun `test POST route - inserir portador com CPF ja existente`() = testApplication {
         val client = createClient {
             install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
                 json(Json {
@@ -85,9 +85,35 @@ class RouteTests : KoinTest {
         }
         val response = client.post("/contas") {
             contentType(ContentType.Application.Json)
-            setBody("""{"cpfPortador":"009.563.109-74"}""")
+            setBody("""{"portador":{"cpf":"009.563.109-74"}}""")
         }
         assertEquals(HttpStatusCode.Created, response.status)
         assertEquals("Conta criada com sucesso", response.bodyAsText())
+    }
+
+
+    @Test
+    fun `test POST route - criar nova conta com CPF ja existente`() = testApplication {
+        val client = createClient {
+            install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                })
+            }
+        }
+
+        val portadorResponse = client.post("/portadores") {
+            contentType(ContentType.Application.Json)
+            setBody("""{"cpf":"009.563.109-74", "nome":"Fulano de Tal"}""")
+        }
+        assertEquals(HttpStatusCode.Created, portadorResponse.status)
+        assertEquals("Portador inserido com sucesso", portadorResponse.bodyAsText())
+
+        val contaResponse = client.post("/contas") {
+            contentType(ContentType.Application.Json)
+            setBody("""{"portador":{"cpf":"009.563.109-74"}}""")
+        }
+        assertEquals(HttpStatusCode.UnprocessableEntity, contaResponse.status)
+        assertEquals("Portador with CPF 009.563.109-74 already exists.", contaResponse.bodyAsText())
     }
 }

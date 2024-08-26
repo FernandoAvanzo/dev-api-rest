@@ -1,7 +1,9 @@
 package api.presentation.routes
 
+import api.application.command.handlers.CreateContaCommandHandler
 import api.application.command.handlers.CreatePortadorCommandHandler
 import api.di.apiModule
+import api.domain.ContaRulesException
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
@@ -11,12 +13,14 @@ import io.ktor.server.response.*
 import io.ktor.server.request.*
 import api.domain.model.Portador
 import api.domain.PortadorRulesException
+import api.domain.model.Conta
 import io.ktor.http.*
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 
 fun Application.configureRouting(){
     val createPortadorCommandHandler : CreatePortadorCommandHandler by inject()
+    val createContaCommandHandler: CreateContaCommandHandler by inject()
     routing {
         route("/portadores"){
             post {
@@ -44,7 +48,22 @@ fun Application.configureRouting(){
         }
         route("/contas"){
             post {
-
+                createContaCommandHandler.runCatching {
+                    handle(
+                        command = call.receive<Conta>()
+                    )
+                    call.respond(HttpStatusCode.Created, "Conta criada com sucesso")
+                }.onFailure {
+                    when(it){
+                        is ContaRulesException -> call.respond(
+                            HttpStatusCode.UnprocessableEntity,
+                            it.localizedMessage
+                        )
+                        else -> call.respond(
+                            HttpStatusCode.InternalServerError,
+                            it.stackTrace
+                        )}
+                }
             }
             get {
 
