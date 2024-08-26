@@ -20,4 +20,5 @@ val apiModule = module {
     single { BlockContaCommandHandler(get(),get()) }
     single { UnblockContaCommandHandler(get(),get()) }
     single { CreateDepositoCommandHandler(get(),get()) }
+    single { CreateSaqueCommandHandler(get(),get()) }
 }

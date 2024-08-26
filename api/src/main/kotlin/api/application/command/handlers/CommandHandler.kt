@@ -94,21 +94,23 @@ class CreateSaqueCommandHandler(
             findByCpf(
                 cpf = it
             )?.let { conta ->
-                val withdrawInput = command.second ?: throw ExtractWrongInputException("wrong value")
-                (conta.saldo - withdrawInput).takeIf{
-                        withdrawPositive -> withdrawPositive >= 0
-                }?.let { withdrawValue ->
-                    val withdraw = Extrato(
-                        conta = conta.copy(
-                            saldo = withdrawValue
-                        ),
-                        valor = withdrawInput,
-                        operacao = Operacao.SAQUE
-                    )
-                    updateConta(withdraw.conta)
-                    extratoRepository.withdraw(withdraw)
-                } ?: throw BalanceNegativeException("Insufficient balance")
-            } ?: throw ContaNotFoundException("Conta with CPF ${command.first} not found.")
-        } ?: throw CpfNullException("CPF not found.")
+                conta.takeIf { active-> active.bloqueado.not() }?.let {
+                    val withdrawInput = command.second ?: throw ExtractWrongInputException("Saldo insuficiente, conta bloqueada ou inativa")
+                    (conta.saldo - withdrawInput).takeIf{
+                            withdrawPositive -> withdrawPositive >= 0
+                    }?.let { withdrawValue ->
+                        val withdraw = Extrato(
+                            conta = conta.copy(
+                                saldo = withdrawValue
+                            ),
+                            valor = withdrawInput,
+                            operacao = Operacao.SAQUE
+                        )
+                        updateConta(withdraw.conta)
+                        extratoRepository.withdraw(withdraw)
+                    } ?: throw ContaInactiveException("Conta bloqueada ou inativa")
+                } ?: throw BalanceNegativeException("Saldo insuficiente, conta bloqueada ou inativa")
+            } ?: throw ContaNotFoundException("Conta não encontrada")
+        } ?: throw CpfNullException("Conta não encontrada")
     }
 }

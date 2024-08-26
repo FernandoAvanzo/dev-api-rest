@@ -303,7 +303,6 @@ class RouteTests : KoinTest {
         }
         assertEquals(HttpStatusCode.OK, depositoResponse.status)
 
-        // Successful withdrawal
         val withdrawalSuccessResponse = client.post("/transacoes/saque") {
             contentType(ContentType.Application.Json)
             setBody(
@@ -315,7 +314,6 @@ class RouteTests : KoinTest {
         assertEquals(HttpStatusCode.OK, withdrawalSuccessResponse.status)
         assertEquals("Saque realizado com sucesso", withdrawalSuccessResponse.bodyAsText())
 
-        // Withdrawal from a blocked account
         client.post("/contas/bloqueio") {
             url {
                 parameters.append("cpf", "009.563.109-74")
@@ -332,7 +330,6 @@ class RouteTests : KoinTest {
         assertEquals(HttpStatusCode.BadRequest, withdrawalBlockedResponse.status)
         assertEquals("Saldo insuficiente, conta bloqueada ou inativa", withdrawalBlockedResponse.bodyAsText())
 
-        // Withdrawal with insufficient balance
         client.post("/contas/desbloqueio") {
             url {
                 parameters.append("cpf", "009.563.109-74")
@@ -349,12 +346,11 @@ class RouteTests : KoinTest {
         assertEquals(HttpStatusCode.BadRequest, withdrawalInsufficientFundsResponse.status)
         assertEquals("Saldo insuficiente, conta bloqueada ou inativa", withdrawalInsufficientFundsResponse.bodyAsText())
 
-        // Withdrawal from a non-existent account
         val withdrawalNotFoundResponse = client.post("/transacoes/saque") {
             contentType(ContentType.Application.Json)
             setBody(
                 """
-            {"conta":{"portador":{"cpf":"000.000.000-00"}}, "valor":100.0}
+            {"conta":{"portador":{"cpf":"069.731.949-09"}}, "valor":100.0}
             """.trimIndent()
             )
         }
