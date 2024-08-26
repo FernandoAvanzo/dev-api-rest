@@ -116,4 +116,40 @@ class RouteTests : KoinTest {
         assertEquals(HttpStatusCode.UnprocessableEntity, contaResponse.status)
         assertEquals("Portador with CPF 009.563.109-74 already exists.", contaResponse.bodyAsText())
     }
+
+
+    @Test
+    fun `test GET route - consultar conta`() = testApplication {
+        val client = createClient {
+            install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                })
+            }
+        }
+
+        val contaResponse = client.post("/contas") {
+            contentType(ContentType.Application.Json)
+            setBody("""{"portador":{"cpf":"009.563.109-74", "nome":"Fulano de Tal"}}""")
+        }
+        assertEquals(HttpStatusCode.Created, contaResponse.status)
+
+        // Perform the GET request
+        val response = client.get("/contas") {
+            url {
+                parameters.append("cpf", "009.563.109-74")
+            }
+        }
+
+        assertEquals(HttpStatusCode.OK, response.status)
+        val responseBody = response.bodyAsText()
+        val expectedResponse = """
+            {
+                "saldo": 0.0,
+                "numero": "1234567890",
+                "agencia": "0001"
+            }
+            """
+        assertEquals(expectedResponse.trimIndent(), responseBody)
+    }
 }

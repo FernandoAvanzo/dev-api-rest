@@ -66,7 +66,25 @@ fun Application.configureRouting(){
                 }
             }
             get {
-
+//                val cpf = call.request.queryParameters["cpf"]
+//                if (cpf == null) {
+//                    call.respond(HttpStatusCode.BadRequest, "Query parameter 'cpf' is required")
+//                    return@get
+//                }
+//                val conta = createContaCommandHandler.portadorRepository.findByCpf(cpf)?.let {
+//                    createContaCommandHandler.contaRepository.findByPortador(it)
+//                }
+//                if (conta == null) {
+//                    call.respond(HttpStatusCode.NotFound, "Conta not found")
+//                } else {
+//                    call.respond(
+//                        HttpStatusCode.OK, mapOf(
+//                            "saldo" to conta.saldo,
+//                            "numero" to conta.numero,
+//                            "agencia" to conta.agencia
+//                        )
+//                    )
+//                }
             }
             delete {
 
