@@ -5,3 +5,4 @@ plugins {
 
 rootProject.name = "dev-api-rest"
 include("api")
+include("docs")
