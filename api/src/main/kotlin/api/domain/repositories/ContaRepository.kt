@@ -7,4 +7,5 @@ interface ContaRepository {
     fun findByCpf(cpf: String): Conta?
     fun blockAccount(conta: Conta)
     fun unBlockAccount(conta: Conta)
+    fun updateConta(conta: Conta)
 }

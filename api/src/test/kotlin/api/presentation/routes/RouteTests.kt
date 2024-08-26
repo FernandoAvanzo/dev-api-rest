@@ -223,4 +223,40 @@ class RouteTests : KoinTest {
         assertEquals(HttpStatusCode.NotFound, responseNotFound.status)
         assertEquals("Conta não encontrada", responseNotFound.bodyAsText())
     }
+
+
+    @Test
+    fun `test POST route - depositar na conta`() = testApplication {
+        val client = createClient {
+            install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                })
+            }
+        }
+
+        // Case 1: Successful deposit
+        val depositSuccessResponse = client.post("/transacoes/deposito") {
+            contentType(ContentType.Application.Json)
+            setBody("""{"cpf":"009.563.109-74", "valor":100.0}""")
+        }
+        assertEquals(HttpStatusCode.OK, depositSuccessResponse.status)
+        assertEquals("Depósito realizado com sucesso", depositSuccessResponse.bodyAsText())
+
+        // Case 2: Account blocked or inactive
+        val depositBlockedResponse = client.post("/transacoes/deposito") {
+            contentType(ContentType.Application.Json)
+            setBody("""{"cpf":"009.563.109-74", "valor":100.0}""")
+        }
+        assertEquals(HttpStatusCode.BadRequest, depositBlockedResponse.status)
+        assertEquals("Conta bloqueada ou inativa", depositBlockedResponse.bodyAsText())
+
+        // Case 3: Account not found
+        val depositNotFoundResponse = client.post("/transacoes/deposito") {
+            contentType(ContentType.Application.Json)
+            setBody("""{"cpf":"000.000.000-00", "valor":100.0}""")
+        }
+        assertEquals(HttpStatusCode.NotFound, depositNotFoundResponse.status)
+        assertEquals("Conta não encontrada", depositNotFoundResponse.bodyAsText())
+    }
 }

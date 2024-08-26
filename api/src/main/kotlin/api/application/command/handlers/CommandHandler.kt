@@ -1,12 +1,17 @@
 package api.application.command.handlers
 
 import api.application.query.handlers.GetContaQueryHandler
+import api.domain.BalanceNegativeException
+import api.domain.ContaNotFoundException
 import api.domain.ContaRulesException
+import api.domain.CpfNullException
 import api.domain.model.Conta
+import api.domain.model.Extrato
+import api.domain.model.Operacao
 import api.domain.model.Portador
 import api.domain.repositories.ContaRepository
+import api.domain.repositories.ExtratoRepository
 import api.domain.repositories.PortadorRepository
-import java.util.PriorityQueue
 
 class CreateContaCommandHandler(
     private val contaRepository: ContaRepository,
@@ -54,5 +59,55 @@ class CreatePortadorCommandHandler(
 ) {
     fun handle(command: Portador) {
         portadorRepository.create(command)
+    }
+}
+
+class CreateDepositoCommandHandler(
+    private val contaRepository: ContaRepository,
+    private val extratoRepository: ExtratoRepository
+){
+    fun handle(command: Pair<String?, Double>) = contaRepository.run{
+        command.first?.let {
+            findByCpf(
+                cpf = it
+            )?.let { conta ->
+                val deposit = Extrato(
+                    conta = conta.copy(
+                        saldo = conta.saldo + command.second
+                    ),
+                    valor = command.second,
+                    operacao = Operacao.DEPOSITO
+                )
+                updateConta(deposit.conta)
+                extratoRepository.deposit(deposit)
+            } ?: throw ContaNotFoundException("Conta with CPF ${command.first} not found.")
+        } ?: throw CpfNullException("CPF not found.")
+    }
+}
+
+class CreateSaqueCommandHandler(
+    private val contaRepository: ContaRepository,
+    private val extratoRepository: ExtratoRepository
+){
+    fun handle(command: Pair<String?, Double>) = contaRepository.run{
+        command.first?.let {
+            findByCpf(
+                cpf = it
+            )?.let { conta ->
+                (conta.saldo - command.second).takeIf{
+                        withdrawPositive -> withdrawPositive >= 0
+                }?.let { withdrawValue ->
+                    val withdraw = Extrato(
+                        conta = conta.copy(
+                            saldo = withdrawValue
+                        ),
+                        valor = command.second,
+                        operacao = Operacao.SAQUE
+                    )
+                    updateConta(withdraw.conta)
+                    extratoRepository.withdraw(withdraw)
+                } ?: throw BalanceNegativeException("Insufficient balance")
+            } ?: throw ContaNotFoundException("Conta with CPF ${command.first} not found.")
+        } ?: throw CpfNullException("CPF not found.")
     }
 }

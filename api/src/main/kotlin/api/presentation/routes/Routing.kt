@@ -152,9 +152,32 @@ fun Application.configureRouting(){
                 }
             }
         }
-        route("/transacoes/deposito"){
+        route("/transacoes/deposito") {
             post {
+                val request = call.receive<Map<String, Any>>()
+                val cpf = request["cpf"] as? String
+                val valor = request["valor"] as? Double
 
+                if (cpf.isNullOrEmpty() || valor == null) {
+                    call.respond(HttpStatusCode.BadRequest, "CPF ou valor do depósito não fornecido")
+                    return@post
+                }
+
+                getContaQueryHandler.runCatching {
+                    handle(cpf)
+                }.onSuccess { conta ->
+                    if (conta.bloqueado) {
+                        call.respond(HttpStatusCode.BadRequest, "Conta bloqueada")
+                    } else {
+                        contaRepository.depositAccount(conta, valor)
+                        call.respond(HttpStatusCode.OK, "Depósito realizado com sucesso")
+                    }
+                }.onFailure {
+                    when (it) {
+                        is ContaNotFoundException -> call.respond(HttpStatusCode.NotFound, "Conta não encontrada")
+                        else -> call.respond(HttpStatusCode.InternalServerError, "Erro interno do servidor")
+                    }
+                }
             }
         }
         route("/transacoes/saque"){

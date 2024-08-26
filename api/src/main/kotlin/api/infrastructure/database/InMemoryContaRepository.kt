@@ -23,4 +23,9 @@ class InMemoryContaRepository :ContaRepository {
         contas.removeIf { it.portador.cpf == conta.portador.cpf }
         contas.add(conta.copy(bloqueado = false))
     }
+
+    override fun updateConta(conta: Conta) {
+        contas.removeIf { it.portador.cpf == conta.portador.cpf }
+        contas.add(conta)
+    }
 }
