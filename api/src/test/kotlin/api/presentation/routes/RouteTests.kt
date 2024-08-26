@@ -140,7 +140,6 @@ class RouteTests : KoinTest {
         }
         assertEquals(HttpStatusCode.Created, contaResponse.status)
 
-        // Perform the GET request
         val response = client.get("/contas") {
             url {
                 parameters.append("cpf", "009.563.109-74")

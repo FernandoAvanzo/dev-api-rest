@@ -1,7 +1,6 @@
 package api.infrastructure.database
 
 import api.domain.model.Conta
-import api.domain.model.Portador
 import api.domain.repositories.ContaRepository
 
 class InMemoryContaRepository :ContaRepository {

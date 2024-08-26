@@ -1,6 +1,7 @@
 package api.domain
 import kotlin.random.Random
 
+@Suppress("DEPRECATION")
 fun String.isValidCPF(): Boolean {
     if (!this.matches(Regex("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"))) return false
 
