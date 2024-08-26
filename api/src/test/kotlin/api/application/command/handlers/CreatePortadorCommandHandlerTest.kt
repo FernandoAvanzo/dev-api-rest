@@ -18,6 +18,6 @@ class CreatePortadorCommandHandlerTest {
             nome ="Test User"
         ))
 
-        verify { portadorRepository.save(any<Portador>()) }
+        verify { portadorRepository.create(any<Portador>()) }
     }
 }

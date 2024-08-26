@@ -72,4 +72,22 @@ class RouteTests : KoinTest {
         assertEquals(HttpStatusCode.UnprocessableEntity, secondResponse.status)
         assertEquals("Portador with cpf 009.563.109-74 already exists", secondResponse.bodyAsText())
     }
+
+
+    @Test
+    fun `test POST route - criar nova conta`() = testApplication {
+        val client = createClient {
+            install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                })
+            }
+        }
+        val response = client.post("/contas") {
+            contentType(ContentType.Application.Json)
+            setBody("""{"cpfPortador":"009.563.109-74"}""")
+        }
+        assertEquals(HttpStatusCode.Created, response.status)
+        assertEquals("Conta criada com sucesso", response.bodyAsText())
+    }
 }

@@ -8,7 +8,7 @@ import api.domain.repositories.PortadorRepository
 class InMemoryPortadorRepository : PortadorRepository {
     private val portadores = mutableSetOf<Portador>()
 
-    override fun save(portador: Portador) {
+    override fun create(portador: Portador) {
         when {
             !portador.cpf.isValidCPF() -> throw PortadorRulesException(
                 "Invalid CPF: ${portador.cpf}"
@@ -20,7 +20,7 @@ class InMemoryPortadorRepository : PortadorRepository {
         }
     }
 
-    override fun findById(cpf: String): Portador? {
+    override fun findByCpf(cpf: String): Portador? {
         return portadores.find { it.cpf == cpf }
     }
 }

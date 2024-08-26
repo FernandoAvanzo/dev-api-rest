@@ -1,5 +1,5 @@
 package api.domain
-
+import kotlin.random.Random
 
 fun String.isValidCPF(): Boolean {
     if (!this.matches(Regex("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"))) return false
@@ -14,4 +14,12 @@ fun String.isValidCPF(): Boolean {
     val secondDigit = if (secondVerifier < 2) 0 else 11 - secondVerifier
 
     return firstDigit == numbers[9] && secondDigit == numbers[10]
+}
+
+fun generateRandomSixDigit(): String {
+    return Random.nextInt(1, 1000000).toString().padStart(6, '0')
+}
+
+fun generateRandomFourDigit(): String {
+    return Random.nextInt(1, 10000).toString().padStart(4, '0')
 }
