@@ -20,7 +20,6 @@ app/.gradle/*
 /out/
 /out/*
 *.bat
-*.sh
 !gradle-wrapper.properties
 
 # Kotlin

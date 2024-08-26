@@ -10,7 +10,7 @@ RUN gradle api:build
 
 FROM openjdk:21-jdk
 
-EXPOSE 9292:8080
+EXPOSE 80:9292
 
 WORKDIR /app
 
