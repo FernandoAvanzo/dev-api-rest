@@ -113,3 +113,65 @@ connections.
 - [Ktor Documentation](https://ktor.io/docs/)
 - [Ktor GitHub Repository](https://github.com/ktorio/ktor)
 - [Modern Web Development with Kotlin and Ktor](https://kotlinlang.org/docs/ktor.html)
+
+### Running the API Locally
+
+To run the Digital Account API locally, follow the instructions below. Make sure you have Docker installed as it is a
+dependency for running the service.
+
+#### Prerequisites
+
+1. **Docker:** The API uses Docker to manage its runtime environment. If you do not have Docker installed on your
+   machine, you can follow the instructions from the [Docker Installation Guide](https://docs.docker.com/get-docker/).
+
+#### Steps to Run the API
+
+1. **Clone the Repository:** Clone the repository containing the Digital Account API to your local machine.
+    ```sh
+    git clone https://github.com/username/digital-account-api.git
+    cd digital-account-api
+    ```
+
+2. **Run the API Script:** Execute the provided script to start the API.
+    ```sh
+    ./runLocalAPI.sh
+    ```
+
+   This script will perform the following tasks:
+    - Build the Docker image for the API.
+    - Create and run a Docker container based on the created image.
+
+#### Testing the API with Postman
+
+Postman is a powerful tool for testing APIs. Here are some tips for using Postman with the Digital Account API:
+
+1. **Import the API Collection:** Download the Postman collection for the Digital Account API and import it into
+   Postman. This collection will contain predefined requests that you can use to interact with the API.
+
+2. **Set up the Environment:** Configure an environment in Postman to store variables such as the API endpoint. This
+   will make it easier to switch between different environments (local, development, production).
+
+3. **Send Requests:** Use the requests in the imported collection to interact with the API. You can perform operations
+   such as creating accounts, making deposits, and withdrawing funds.
+
+4. **Check Responses:** Postman allows you to view and analyze the API responses, making it easy to debug issues and
+   verify that the API is working correctly.
+
+- [Postman Documentation](https://learning.postman.com/docs/getting-started/introduction/)
+
+By following these steps, you can set up and test the Digital Account API locally on your machine.
+
+### Future Implementations
+
+Currently, the route `/contas/extrato` is not implemented. This route is planned to be added in a future release and
+will provide clients with the ability to retrieve account statements. The implementation will likely include features
+such as filtering transactions by date range, viewing detailed transaction information, and exporting statements in
+various formats. Stay tuned for updates on this feature.
+
+### Choice of English Language
+
+The README documentation for the Digital Account API is written in English to ensure broad accessibility and
+universality. English is widely used as the primary language for technical documentation and software development,
+allowing developers and users across different regions to understand and contribute to the project more effectively. By
+using English, the documentation caters to a global audience, promoting inclusivity and collaboration from the
+international development community.
