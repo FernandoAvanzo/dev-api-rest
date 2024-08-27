@@ -112,7 +112,6 @@ connections.
 - [Kotlin Documentation](https://kotlinlang.org/docs/home.html)
 - [Ktor Documentation](https://ktor.io/docs/)
 - [Ktor GitHub Repository](https://github.com/ktorio/ktor)
-- [Modern Web Development with Kotlin and Ktor](https://kotlinlang.org/docs/ktor.html)
 
 ### Running the API Locally
 
