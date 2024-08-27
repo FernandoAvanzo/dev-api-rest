@@ -144,17 +144,11 @@ dependency for running the service.
 
 Postman is a powerful tool for testing APIs. Here are some tips for using Postman with the Digital Account API:
 
-1. **Import the API Collection:** Download the Postman collection for the Digital Account API and import it into
-   Postman. This collection will contain predefined requests that you can use to interact with the API.
+1. **Send Requests:** Utilize the [OpenAPI Specification](./api/src/main/resources/ApiDescription.json) to interact with
+   the API. You can perform operations such as creating accounts, making deposits, and withdrawing funds.
 
-2. **Set up the Environment:** Configure an environment in Postman to store variables such as the API endpoint. This
-   will make it easier to switch between different environments (local, development, production).
-
-3. **Send Requests:** Use the requests in the imported collection to interact with the API. You can perform operations
-   such as creating accounts, making deposits, and withdrawing funds.
-
-4. **Check Responses:** Postman allows you to view and analyze the API responses, making it easy to debug issues and
-   verify that the API is working correctly.
+2. **Check Responses:** Use Postman to view and analyze the API responses. This tool facilitates easy debugging and
+   verification of the API's functionality.
 
 - [Postman Documentation](https://learning.postman.com/docs/getting-started/introduction/)
 
