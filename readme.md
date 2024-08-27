@@ -28,7 +28,7 @@ This microservice focuses on managing bank digital accounts, including the follo
 
 ### More Information
 
-For detailed API specifications, you can refer to the OpenAPI JSON file located in the `./api/resources` directory:
+For detailed API specifications, you can refer to the OpenAPI JSON file located in the `./api/src/main/resources` directory:
 [OpenAPI Specification](./api/src/main/resources/ApiDescription.json)
 
 ### CQRS Architecture
