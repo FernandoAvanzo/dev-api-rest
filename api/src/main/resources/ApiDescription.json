@@ -1,9 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Digital Dock Account API",
+    "title": "Digital Account API",
     "version": "1.0.0",
-    "description": "API to manage Digital Dock accounts and holders"
+    "description": "API to manage Digital accounts and holders"
   },
   "paths": {
     "/portadores": {
