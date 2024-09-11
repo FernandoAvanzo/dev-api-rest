@@ -1,6 +1,8 @@
 #!/bin/bash
 
-#!/bin/bash
+if [ "$(docker ps -a -q -f name=api_local_container)" ]; then
+  docker rm -f api_local_container
+fi
 
 docker build -t api_local_image .
 docker run -d -p 80:9292 --name api_local_container api_local_image
