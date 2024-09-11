@@ -1,4 +1,6 @@
-import org.gradle.jvm.tasks.Jar
+@file:Suppress("DEPRECATION")
+
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "2.0.20"
@@ -8,6 +10,14 @@ plugins {
 }
 
 version = "1.0-SNAPSHOT"
+
+kotlin {
+    jvmToolchain(21)
+}
+
+application {
+    mainClass.set("api.ApplicationKt")
+}
 
 repositories {
     mavenCentral()
@@ -32,6 +42,16 @@ dependencies {
     testImplementation("io.insert-koin:koin-test-junit5:3.5.6")
 }
 
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "21"
+}
+
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "21"
+}
+
 tasks.test {
     useJUnitPlatform()
     testLogging {
@@ -39,18 +59,12 @@ tasks.test {
     }
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
-application {
-    mainClass.set("api.ApplicationKt")
-}
-
-tasks.withType<Jar> {
+tasks.jar {
     manifest {
         attributes["Main-Class"] = "api.ApplicationKt"
     }
+    configurations["compileClasspath"].forEach { file: File ->
+        from(zipTree(file.absoluteFile))
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
